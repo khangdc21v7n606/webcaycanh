@@ -166,12 +166,14 @@ if (btnSubmitLogin) {
 const btnLogout = document.getElementById('btnLogout');
 if (btnLogout) {
     btnLogout.addEventListener('click', () => {
-        localStorage.removeItem('currentUser'); 
-        checkLoginStatus(); 
+        localStorage.removeItem('currentUser'); // Xóa phiên đăng nhập
+        checkLoginStatus(); // Cập nhật lại UI header
         alert("Đã đăng xuất!");
+        
+        // (Tùy chọn) Nếu bạn muốn khi đăng xuất, web tự động quay về trang chủ để reset mọi thứ:
+        window.location.reload(); 
     });
 }
-
 // 5. Cập nhật giao diện Header
 function checkLoginStatus() {
     const currentUser = localStorage.getItem('currentUser');
@@ -190,3 +192,30 @@ function checkLoginStatus() {
 }
 
 checkLoginStatus();
+
+/* =========================================
+   6. ĐỒNG BỘ DỮ LIỆU SẢN PHẨM SANG GIỎ HÀNG
+   ========================================= */
+function syncProductsToLocalStorage() {
+    const products = document.querySelectorAll('.product');
+    const productList = [];
+
+    products.forEach((p, index) => {
+        const img = p.querySelector('img').src;
+        const name = p.querySelector('h3').innerText;
+        const price = p.querySelector('.price').innerText;
+        
+        productList.push({
+            id: 'SP_' + index, // Tạo ID tự động dựa trên vị trí
+            img: img,
+            name: name,
+            price: price,
+        });
+    });
+
+    // Lưu toàn bộ mảng sản phẩm vào localStorage
+    localStorage.setItem('allProducts', JSON.stringify(productList));
+}
+
+// Chạy hàm đồng bộ ngay khi load trang chủ
+syncProductsToLocalStorage();

@@ -1,0 +1,308 @@
+:root {
+    --primary-color: #2b7a4b;
+    --primary-hover: #1e5a36;
+    --text-main: #2d3436;
+    --bg-body: #f4f6f8;
+    --bg-white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+/* --- HEADER --- */
+header {
+    background: var(--bg-white);
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo h1 {
+    font-size: 24px;
+}
+.logo h1 span {
+    color: var(--primary-color);
+}
+.user-greeting {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* --- MAIN LAYOUT (2 CỘT) --- */
+.checkout-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* --- CỘT TRÁI: FORM --- */
+.checkout-form-section {
+    flex: 6; background: var(--bg-white);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+.btn-back {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+}
+.btn-back:hover {
+    color: var(--primary-color);
+}
+h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+.input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.input-group input, .input-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: 0.3s;
+}
+.input-group input:focus {
+    border-color: var(--primary-color);
+}
+.error-msg {
+    color: #e74c3c;
+    font-size: 12px; display: none;
+    margin-top: 5px;
+}
+
+/* Radio Button Method */
+.payment-methods {
+    margin-bottom: 20px;
+}
+.radio-container {
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 15px;
+}
+.radio-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+.checkmark {
+    position: absolute;
+    top: 2px; left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: 50%;
+}
+.radio-container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+.radio-container input:checked ~ .checkmark {
+    background-color: var(--primary-color);
+}
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+.radio-container input:checked ~ .checkmark:after {
+    display: block;
+}
+.radio-container .checkmark:after {
+    top: 6px;
+    left: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}
+
+/* Form Credit Card */
+.credit-card-details {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+}
+.card-row {
+    display: flex;
+    gap: 15px;
+}
+
+/* Button & Loader */
+.btn-primary {
+    width: 100%; padding: 15px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+.loader {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); }
+}
+
+/* --- CỘT PHẢI: ĐƠN HÀNG --- */
+.checkout-summary-section {
+    flex: 4;
+    background: var(--bg-white);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 20px;
+}
+.order-items {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+.order-item {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #eee;
+}
+.order-item img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+.item-info h4 {
+    font-size: 14px;
+}
+.item-info p {
+    font-size: 13px;
+    color: #666;
+}
+.item-price {
+    margin-top: 5px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.summary-totals {
+    border-top: 2px solid #eee;
+    padding-top: 20px;
+}
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+.summary-line.total {
+    font-size: 18px;
+    font-weight: 700; 
+    margin-top: 15px;
+    border-top: 1px dashed #ccc;
+    padding-top: 15px;
+}
+.price-highlight {
+    color: var(--primary-color);
+}
+
+/* --- MODAL SUCCESS --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+.success-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    max-width: 400px;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.check-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    margin: 0 auto 20px;
+}
+.success-content h2 {
+    border: none;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+.success-content p {
+    margin-bottom: 25px;
+    color: #666;
+    font-size: 14px;
+}
+@keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+/* --- RESPONSIVE MOBILE --- */
+@media (max-width: 768px) {
+    .checkout-container { flex-direction: column-reverse; }
+    .checkout-form-section, .checkout-summary-section { flex: 1; width: 100%; }
+    .checkout-summary-section { position: static; }
+}

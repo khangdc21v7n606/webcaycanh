@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán - VuonNhoST</title>
+    <link rel="stylesheet" href="ThanhToan.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <h1>VuonNho<span>ST</span></h1>
+            </div>
+            <div class="user-greeting">
+                <span id="userNameDisplay">Xin chào, Khách</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="checkout-container">
+        <div class="checkout-form-section">
+            <a href="file:///E:/website/webcaycanh/GioHang/GioHang.html" class="btn-back"> <-Quay lại Giỏ hàng</a>
+            <h2>Thông tin giao hàng</h2>
+            
+            <form id="checkoutForm">
+                <div class="input-group">
+                    <label>Họ và tên người nhận (*)</label>
+                    <input type="text" id="fullname" placeholder="Nhập họ tên đầy đủ">
+                    <span class="error-msg" id="errName"></span>
+                </div>
+
+                <div class="input-group">
+                    <label>Số điện thoại (*)</label>
+                    <input type="tel" id="phone" placeholder="Ví dụ: 0912345678">
+                    <span class="error-msg" id="errPhone"></span>
+                </div>
+
+                <div class="input-group">
+                    <label>Địa chỉ giao hàng (*)</label>
+                    <input type="text" id="address" placeholder="Số nhà, tên đường, phường/xã, quận/huyện...">
+                    <span class="error-msg" id="errAddress"></span>
+                </div>
+
+                <div class="input-group">
+                    <label>Ghi chú (Tùy chọn)</label>
+                    <textarea id="note" rows="3" placeholder="Ghi chú về thời gian giao hàng..."></textarea>
+                </div>
+
+                <h2>Phương thức thanh toán</h2>
+                <div class="payment-methods">
+                    <label class="radio-container">
+                        <input type="radio" name="payment" value="cod" checked>
+                        <span class="checkmark"></span>
+                        Thanh toán khi nhận hàng (COD)
+                    </label>
+                    <label class="radio-container">
+                        <input type="radio" name="payment" value="card">
+                        <span class="checkmark"></span>
+                        Thanh toán bằng thẻ tín dụng
+                    </label>
+                </div>
+
+                <div id="creditCardForm" class="credit-card-details" style="display: none;">
+                    <div class="input-group">
+                        <label>Số thẻ (*)</label>
+                        <input type="text" id="cardNumber" placeholder="xxxx xxxx xxxx xxxx">
+                    </div>
+                    <div class="input-group">
+                        <label>Tên chủ thẻ (*)</label>
+                        <input type="text" id="cardName" placeholder="VI DU TEN">
+                    </div>
+                    <div class="card-row">
+                        <div class="input-group">
+                            <label>Ngày hết hạn (*)</label>
+                            <input type="text" id="cardExp" placeholder="MM/YY">
+                        </div>
+                        <div class="input-group">
+                            <label>CVV (*)</label>
+                            <input type="text" id="cardCvv" placeholder="123">
+                        </div>
+                    </div>
+                    <span class="error-msg" id="errCard"></span>
+                </div>
+
+                <button type="submit" class="btn-primary" id="btnSubmit">
+                    <span id="btnText">Xác nhận thanh toán</span>
+                    <span id="btnLoading" class="loader" style="display: none;"></span>
+                </button>
+            </form>
+        </div>
+
+        <div class="checkout-summary-section">
+            <h2>Đơn hàng của bạn</h2>
+            <div class="order-items" id="orderItemsList">
+                </div>
+            
+            <div class="summary-totals">
+                <div class="summary-line">
+                    <span>Tổng tiền sản phẩm</span>
+                    <span id="subTotal">0đ</span>
+                </div>
+                <div class="summary-line">
+                    <span>Phí vận chuyển</span>
+                    <span id="shippingFee">30.000đ</span>
+                </div>
+                <div class="summary-line total">
+                    <span>Tổng cộng</span>
+                    <span id="finalTotal" class="price-highlight">0đ</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-content success-content">
+            <div class="check-icon">✓</div>
+            <h2>Thanh toán thành công!</h2>
+            <p>Cảm ơn bạn đã mua sắm tại VuonNhoST. Đơn hàng của bạn đang được xử lý.</p>
+            <button class="btn-primary" onclick="window.location.href='file:///E:/website/webcaycanh/TrangChu/TrangChu.html'">Quay về Trang Chủ</button>
+        </div>
+    </div>
+
+    <script src="ThanhToan.js"></script>
+</body>
+</html>

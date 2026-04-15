@@ -125,6 +125,18 @@ a { text-decoration: none; }
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Khoảng cách cho tên người dùng và nút đăng xuất */
+#userNameDisplay {
+    margin-right: 20px; /* Bạn có thể tăng số 20px này lên nếu muốn xa hơn nữa */
+    font-weight: 600;
+}
+
+/* Đảm bảo khu vực chứa tài khoản hiển thị căn giữa ngang hàng */
+#userSection {
+    display: flex;
+    align-items: center;
+}
+
 /* --- HEADER: KÍNH MỜ (GLASSMORPHISM) --- */
 header {
     background: rgba(255, 255, 255, 0.9);
