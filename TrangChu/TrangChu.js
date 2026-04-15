@@ -1,5 +1,5 @@
 /* =========================================
-   1. LOGIC SLIDER (QUẢNG CÁO)
+   1. LOGIC SLIDER (QUẢNG CÁO) - FADE EFFECT
    ========================================= */
 let slideIndex = 0;
 const slides = document.querySelectorAll('.slide');
@@ -10,10 +10,16 @@ function showSlide(index) {
     if (index >= slides.length) slideIndex = 0;
     if (index < 0) slideIndex = slides.length - 1;
     
-    slides.forEach(slide => slide.style.display = "none");
+    // Xóa class 'active' của tất cả các slide (để chúng mờ đi)
+    slides.forEach(slide => {
+        slide.classList.remove('active');
+    });
+    
+    // Xóa class 'active' của tất cả các dấu chấm
     dots.forEach(dot => dot.classList.remove('active'));
     
-    if(slides.length > 0) slides[slideIndex].style.display = "block";
+    // Thêm class 'active' cho slide và dấu chấm hiện tại (để nó từ từ hiện ra)
+    if(slides.length > 0) slides[slideIndex].classList.add('active');
     if(dots.length > 0) dots[slideIndex].classList.add('active');
 }
 
@@ -31,9 +37,10 @@ function currentSlide(n) {
 
 function resetInterval() {
     clearInterval(slideInterval);
-    slideInterval = setInterval(() => changeSlide(1), 3000); 
+    slideInterval = setInterval(() => changeSlide(1), 4000); // 4 giây đổi 1 lần
 }
 
+// Khởi tạo slider
 showSlide(slideIndex);
 resetInterval();
 
