@@ -41,54 +41,74 @@ showSlide(slideIndex);
 resetInterval();
 
 /* =========================================
-   2. LOGIC TÌM KIẾM SẢN PHẨM (REAL-TIME)
+   2. LOGIC HIỂN THỊ 4 SẢN PHẨM & TÌM KIẾM
    ========================================= */
 const searchInput = document.getElementById('searchInput');
 const noProductMsg = document.getElementById('noProductMsg');
 
-/* --- TỰ ĐỘNG CUỘN XUỐNG KHI NHẤP VÀO Ô TÌM KIẾM --- */
-searchInput.addEventListener('focus', function() {
-    const productsSection = document.querySelector('.products-container');
-    const header = document.querySelector('header');
-    
-    // Tính toán vị trí của phần sản phẩm, trừ đi chiều cao của header (vì header của bạn đang dính ở trên cùng)
-    const headerHeight = header.offsetHeight;
-    const elementPosition = productsSection.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.scrollY - headerHeight - 20; // Trừ thêm 20px để có khoảng thở đẹp mắt
+// Lấy tất cả các sản phẩm có trong HTML
+const allProducts = document.querySelectorAll('.product');
+const MAX_DISPLAY = 4; // Số lượng sản phẩm tối đa muốn hiển thị
 
-    // Lệnh cuộn trang mượt mà
-    window.scrollTo({
-         top: offsetPosition,
-         behavior: "smooth"
+// Hàm mặc định: Chỉ hiện 4 sản phẩm đầu tiên
+function showLatestProducts() {
+    allProducts.forEach((product, index) => {
+        if (index < MAX_DISPLAY) {
+            product.style.display = "flex"; // Hiện 4 cái đầu (Dùng flex để giữ nguyên layout cho nút bấm)
+        } else {
+            product.style.display = "none"; // Ẩn phần còn lại
+        }
     });
-});
+}
 
-// Sự kiện input sẽ kích hoạt mỗi khi gõ phím
+// Chạy hàm này ngay khi load trang
+showLatestProducts();
+
+// Sự kiện tìm kiếm
 searchInput.addEventListener('input', function() {
     const keyword = searchInput.value.toLowerCase().trim();
-    // Lấy TẤT CẢ sản phẩm hiện có trong DOM tại thời điểm gõ
-    // Nhờ cách này, nếu HTML thêm sản phẩm mới thì hàm vẫn hoạt động bình thường
-    const products = document.querySelectorAll('.product'); 
     let hasVisibleProduct = false;
 
-    products.forEach(product => {
-        // Tìm thẻ h3 chứa tên cây bên trong mỗi product
+    // Nếu người dùng xóa hết chữ trong thanh tìm kiếm -> Trả về giao diện 4 sản phẩm
+    if (keyword === '') {
+        showLatestProducts();
+        noProductMsg.style.display = "none";
+        return;
+    }
+
+    // Nếu có gõ từ khóa -> Tiến hành quét toàn bộ sản phẩm (kể cả cái bị ẩn)
+    allProducts.forEach(product => {
         const productName = product.querySelector('h3').innerText.toLowerCase();
         
         if (productName.includes(keyword)) {
-            product.style.display = "block"; // Hiện nếu khớp
+            product.style.display = "flex"; // Hiện nếu khớp
             hasVisibleProduct = true;
         } else {
             product.style.display = "none";  // Ẩn nếu không khớp
         }
     });
 
-    // Hiện thông báo "Không tìm thấy" nếu không có sản phẩm nào
+    // Hiện thông báo "Không tìm thấy" nếu không có sản phẩm nào khớp
     if (!hasVisibleProduct) {
         noProductMsg.style.display = "block";
     } else {
         noProductMsg.style.display = "none";
     }
+});
+
+/* --- TỰ ĐỘNG CUỘN XUỐNG KHI NHẤP VÀO Ô TÌM KIẾM --- */
+searchInput.addEventListener('focus', function() {
+    const productsSection = document.querySelector('.products-container');
+    const header = document.querySelector('header');
+    
+    const headerHeight = header.offsetHeight;
+    const elementPosition = productsSection.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.scrollY - headerHeight - 20;
+
+    window.scrollTo({
+         top: offsetPosition,
+         behavior: "smooth"
+    });
 });
 
 /* =========================================
