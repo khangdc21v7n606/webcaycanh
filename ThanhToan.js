@@ -2,23 +2,26 @@
    1. KIỂM TRA ĐĂNG NHẬP & XÁC ĐỊNH GIỎ HÀNG
    ========================================= */
 const currentUser = localStorage.getItem('currentUser');
+let cart = []; // Khai báo sẵn biến cart ở ngoài để các phần sau không bị lỗi
 
 if (!currentUser) {
-    // Nếu chưa đăng nhập -> Đuổi về trang chủ
+    // Nếu chưa đăng nhập -> Báo lỗi và đuổi về trang chủ
     alert("Bạn cần đăng nhập để tiến hành thanh toán!");
-    window.location.href = "TrangChu.html";
-}
+    window.location.href = "index.html";
+} else {
+    // NẾU ĐÃ ĐĂNG NHẬP -> Mới chạy tiếp các lệnh dưới đây
+    
+    // Cập nhật tên người dùng lên Header
+    document.getElementById('userNameDisplay').innerText = `Xin chào, ${currentUser}`;
 
-// Cập nhật tên người dùng lên Header
-document.getElementById('userNameDisplay').innerText = `Xin chào, ${currentUser}`;
+    // Khóa (key) giỏ hàng của người dùng này trong localStorage
+    const cartStorageKey = 'cart_' + currentUser;
+    cart = JSON.parse(localStorage.getItem(cartStorageKey)) || [];
 
-// Khóa (key) giỏ hàng của người dùng này trong localStorage
-const cartStorageKey = 'cart_' + currentUser;
-let cart = JSON.parse(localStorage.getItem(cartStorageKey)) || [];
-
-if (cart.length === 0) {
-    alert("Giỏ hàng của bạn đang trống! Hãy chọn mua sản phẩm trước.");
-    window.location.href = "GioHang.html";
+    if (cart.length === 0) {
+        alert("Giỏ hàng của bạn đang trống! Hãy chọn mua sản phẩm trước.");
+        window.location.href = "GioHang.html";
+    }
 }
 
 /* =========================================
