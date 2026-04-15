@@ -10,13 +10,11 @@ function showSlide(index) {
     if (index >= slides.length) slideIndex = 0;
     if (index < 0) slideIndex = slides.length - 1;
     
-    // Ẩn tất cả và bỏ class active của dot
     slides.forEach(slide => slide.style.display = "none");
     dots.forEach(dot => dot.classList.remove('active'));
     
-    // Hiển thị slide hiện tại
-    slides[slideIndex].style.display = "block";
-    dots[slideIndex].classList.add('active');
+    if(slides.length > 0) slides[slideIndex].style.display = "block";
+    if(dots.length > 0) dots[slideIndex].classList.add('active');
 }
 
 function changeSlide(n) {
@@ -33,10 +31,9 @@ function currentSlide(n) {
 
 function resetInterval() {
     clearInterval(slideInterval);
-    slideInterval = setInterval(() => changeSlide(1), 3000); // Tự động chạy mỗi 3s
+    slideInterval = setInterval(() => changeSlide(1), 3000); 
 }
 
-// Khởi tạo slider
 showSlide(slideIndex);
 resetInterval();
 
@@ -45,189 +42,151 @@ resetInterval();
    ========================================= */
 const searchInput = document.getElementById('searchInput');
 const noProductMsg = document.getElementById('noProductMsg');
-
-// Lấy tất cả các sản phẩm có trong HTML
 const allProducts = document.querySelectorAll('.product');
-const MAX_DISPLAY = 4; // Số lượng sản phẩm tối đa muốn hiển thị
+const MAX_DISPLAY = 4; 
 
-// Hàm mặc định: Chỉ hiện 4 sản phẩm đầu tiên
 function showLatestProducts() {
     allProducts.forEach((product, index) => {
         if (index < MAX_DISPLAY) {
-            product.style.display = "flex"; // Hiện 4 cái đầu (Dùng flex để giữ nguyên layout cho nút bấm)
+            product.style.display = "flex"; 
         } else {
-            product.style.display = "none"; // Ẩn phần còn lại
+            product.style.display = "none"; 
         }
     });
 }
 
-// Chạy hàm này ngay khi load trang
 showLatestProducts();
 
-// Sự kiện tìm kiếm
-searchInput.addEventListener('input', function() {
-    const keyword = searchInput.value.toLowerCase().trim();
-    let hasVisibleProduct = false;
+if (searchInput) {
+    searchInput.addEventListener('input', function() {
+        const keyword = searchInput.value.toLowerCase().trim();
+        let hasVisibleProduct = false;
 
-    // Nếu người dùng xóa hết chữ trong thanh tìm kiếm -> Trả về giao diện 4 sản phẩm
-    if (keyword === '') {
-        showLatestProducts();
-        noProductMsg.style.display = "none";
-        return;
-    }
+        if (keyword === '') {
+            showLatestProducts();
+            noProductMsg.style.display = "none";
+            return;
+        }
 
-    // Nếu có gõ từ khóa -> Tiến hành quét toàn bộ sản phẩm (kể cả cái bị ẩn)
-    allProducts.forEach(product => {
-        const productName = product.querySelector('h3').innerText.toLowerCase();
-        
-        if (productName.includes(keyword)) {
-            product.style.display = "flex"; // Hiện nếu khớp
-            hasVisibleProduct = true;
+        allProducts.forEach(product => {
+            const productName = product.querySelector('h3').innerText.toLowerCase();
+            if (productName.includes(keyword)) {
+                product.style.display = "flex"; 
+                hasVisibleProduct = true;
+            } else {
+                product.style.display = "none";  
+            }
+        });
+
+        if (!hasVisibleProduct) {
+            noProductMsg.style.display = "block";
         } else {
-            product.style.display = "none";  // Ẩn nếu không khớp
+            noProductMsg.style.display = "none";
         }
     });
 
-    // Hiện thông báo "Không tìm thấy" nếu không có sản phẩm nào khớp
-    if (!hasVisibleProduct) {
-        noProductMsg.style.display = "block";
-    } else {
-        noProductMsg.style.display = "none";
-    }
-});
+    /* --- TỰ ĐỘNG CUỘN XUỐNG KHI TÌM KIẾM --- */
+    searchInput.addEventListener('focus', function() {
+        const productsSection = document.querySelector('.products-container');
+        const header = document.querySelector('header');
+        
+        if (productsSection && header) {
+            const headerHeight = header.offsetHeight;
+            const elementPosition = productsSection.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.scrollY - headerHeight - 20;
 
-/* --- TỰ ĐỘNG CUỘN XUỐNG KHI NHẤP VÀO Ô TÌM KIẾM --- */
-searchInput.addEventListener('focus', function() {
-    const productsSection = document.querySelector('.products-container');
-    const header = document.querySelector('header');
-    
-    const headerHeight = header.offsetHeight;
-    const elementPosition = productsSection.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.scrollY - headerHeight - 20;
-
-    window.scrollTo({
-         top: offsetPosition,
-         behavior: "smooth"
+            window.scrollTo({
+                 top: offsetPosition,
+                 behavior: "smooth"
+            });
+        }
     });
-});
+}
 
 /* =========================================
-   3. LOGIC ĐĂNG NHẬP / ĐĂNG KÝ (LOCALSTORAGE)
+   3. LOGIC POP-UP ĐĂNG NHẬP MỚI
    ========================================= */
-const modal = document.getElementById('authModal');
-const closeBtn = document.querySelector('.close-btn');
+const loginModal = document.getElementById('loginModal');
 const btnLogin = document.getElementById('btnLogin');
-const btnRegister = document.getElementById('btnRegister');
+const closeX = document.querySelector('.close-modal');
+const btnSubmitLogin = document.getElementById('btnSubmitLogin');
+
+// 1. Mở Pop-up
+if (btnLogin && loginModal) {
+    btnLogin.addEventListener('click', () => {
+        loginModal.style.display = 'block';
+        // Xóa thông báo lỗi và làm trống ô nhập khi mở lại form
+        document.getElementById('loginErrorMessage').style.display = 'none';
+        document.getElementById('loginUsername').value = '';
+        document.getElementById('loginPassword').value = '';
+    });
+}
+
+// 2. Đóng Pop-up
+if (closeX && loginModal) {
+    closeX.addEventListener('click', () => {
+        loginModal.style.display = 'none';
+    });
+}
+// Đóng khi click ra vùng đen bên ngoài
+window.addEventListener('click', (e) => {
+    if (e.target === loginModal) {
+        loginModal.style.display = 'none';
+    }
+});
+
+// 3. Xử lý Nút Xác Nhận Đăng Nhập
+if (btnSubmitLogin) {
+    btnSubmitLogin.addEventListener('click', () => {
+        const user = document.getElementById('loginUsername').value.trim();
+        const pass = document.getElementById('loginPassword').value.trim();
+        const errorMsg = document.getElementById('loginErrorMessage');
+
+        if (user === "" || pass === "") {
+            errorMsg.innerText = "Vui lòng điền đầy đủ thông tin!";
+            errorMsg.style.display = "block";
+            return;
+        }
+
+        const savedPass = localStorage.getItem(user);
+
+        if (savedPass && savedPass === pass) {
+            localStorage.setItem('currentUser', user); 
+            alert("Đăng nhập thành công!");
+            loginModal.style.display = 'none'; 
+            checkLoginStatus(); 
+        } else {
+            errorMsg.innerText = "Tên đăng nhập hoặc mật khẩu không đúng!";
+            errorMsg.style.display = "block";
+        }
+    });
+}
+
+// 4. Xử lý Đăng xuất
 const btnLogout = document.getElementById('btnLogout');
+if (btnLogout) {
+    btnLogout.addEventListener('click', () => {
+        localStorage.removeItem('currentUser'); 
+        checkLoginStatus(); 
+        alert("Đã đăng xuất!");
+    });
+}
 
-// Elements trong Modal
-const modalTitle = document.getElementById('modalTitle');
-const usernameInput = document.getElementById('usernameInput');
-const passwordInput = document.getElementById('passwordInput');
-const btnSubmitAuth = document.getElementById('btnSubmitAuth');
-const modalSwitchText = document.getElementById('modalSwitchText');
-const modalSwitchLink = document.getElementById('modalSwitchLink');
-const modalError = document.getElementById('modalError');
-
-let isLoginMode = true; // Cờ xác định đang ở form Đăng nhập hay Đăng ký
-
-// Cập nhật giao diện Header dựa vào trạng thái đăng nhập
+// 5. Cập nhật giao diện Header
 function checkLoginStatus() {
     const currentUser = localStorage.getItem('currentUser');
+    const guestSection = document.getElementById('guestSection');
+    const userSection = document.getElementById('userSection');
+    const nameDisplay = document.getElementById('userNameDisplay');
+
     if (currentUser) {
-        document.getElementById('guestSection').style.display = "none";
-        document.getElementById('userSection').style.display = "block";
-        document.getElementById('userNameDisplay').innerText = `Chào, ${currentUser}`;
+        if(guestSection) guestSection.style.display = 'none';
+        if(userSection) userSection.style.display = 'block';
+        if(nameDisplay) nameDisplay.innerText = `Chào, ${currentUser}`;
     } else {
-        document.getElementById('guestSection').style.display = "block";
-        document.getElementById('userSection').style.display = "none";
+        if(guestSection) guestSection.style.display = 'block';
+        if(userSection) userSection.style.display = 'none';
     }
 }
-// Chạy hàm kiểm tra ngay khi load trang
+
 checkLoginStatus();
-
-// Mở modal
-function openModal(mode) {
-    isLoginMode = mode === 'login';
-    updateModalUI();
-    modal.style.display = 'block';
-    modalError.style.display = 'none';
-    usernameInput.value = '';
-    passwordInput.value = '';
-}
-
-// Đóng modal
-closeBtn.onclick = () => modal.style.display = "none";
-window.onclick = (e) => { if (e.target == modal) modal.style.display = "none"; }
-
-// Cập nhật chữ trong Modal tùy thuộc mode
-function updateModalUI() {
-    if (isLoginMode) {
-        modalTitle.innerText = "Đăng nhập";
-        modalSwitchText.innerText = "Chưa có tài khoản?";
-        modalSwitchLink.innerText = "Đăng ký ngay";
-    } else {
-        modalTitle.innerText = "Đăng ký";
-        modalSwitchText.innerText = "Đã có tài khoản?";
-        modalSwitchLink.innerText = "Đăng nhập ngay";
-    }
-}
-
-// Chuyển đổi qua lại giữa form Đăng ký / Đăng nhập
-modalSwitchLink.onclick = (e) => {
-    e.preventDefault();
-    isLoginMode = !isLoginMode;
-    updateModalUI();
-    modalError.style.display = 'none';
-};
-
-// Gắn sự kiện mở modal cho các nút trên Header
-btnLogin.onclick = () => openModal('login');
-btnRegister.onclick = () => openModal('register');
-
-// Xử lý khi bấm nút "Xác nhận" trong Modal
-btnSubmitAuth.onclick = () => {
-    const user = usernameInput.value.trim();
-    const pass = passwordInput.value.trim();
-
-    if (!user || !pass) {
-        showError("Vui lòng nhập đầy đủ thông tin!");
-        return;
-    }
-
-    if (isLoginMode) {
-        // XỬ LÝ ĐĂNG NHẬP
-        const savedPass = localStorage.getItem(user); // Lấy mật khẩu từ localStorage
-        if (savedPass && savedPass === pass) {
-            localStorage.setItem('currentUser', user); // Lưu phiên đăng nhập
-            modal.style.display = "none";
-            checkLoginStatus();
-            alert("Đăng nhập thành công!");
-        } else {
-            showError("Tài khoản hoặc mật khẩu không chính xác!");
-        }
-    } else {
-        // XỬ LÝ ĐĂNG KÝ
-        if (localStorage.getItem(user)) {
-            showError("Tên đăng nhập đã tồn tại!");
-        } else {
-            localStorage.setItem(user, pass); // Lưu tài khoản mới
-            alert("Đăng ký thành công! Đang tự động đăng nhập...");
-            localStorage.setItem('currentUser', user);
-            modal.style.display = "none";
-            checkLoginStatus();
-        }
-    }
-};
-
-// Xử lý Đăng xuất
-btnLogout.onclick = () => {
-    localStorage.removeItem('currentUser'); // Xóa phiên đăng nhập
-    checkLoginStatus(); // Cập nhật lại UI header
-    alert("Đã đăng xuất!");
-};
-
-function showError(msg) {
-    modalError.innerText = msg;
-    modalError.style.display = "block";
-}
