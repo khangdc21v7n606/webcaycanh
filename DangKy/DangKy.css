@@ -1,0 +1,153 @@
+/* --- BIẾN MÀU SẮC ĐỒNG BỘ TRANG CHỦ --- */
+:root {
+    --primary-color: #2b7a4b;
+    --primary-hover: #1e5a36;
+    --text-main: #2d3436;
+    --text-light: #636e72;
+    --bg-body: #f4f6f8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* --- KHUNG ĐĂNG KÝ --- */
+.register-container {
+    width: 100%;
+    max-width: 450px;
+}
+
+.register-card {
+    background-color: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.logo h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
+    margin-bottom: 20px;
+}
+
+.logo h1 span {
+    color: var(--primary-color);
+}
+
+h2 {
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: var(--text-light);
+    font-size: 13px;
+    margin-bottom: 25px;
+}
+
+/* --- FORM INPUT --- */
+.input-group {
+    text-align: left;
+    margin-bottom: 18px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text-main);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #dfe6e9;
+    border-radius: 10px;
+    outline: none;
+    transition: 0.3s;
+    font-size: 14px;
+    background-color: #f8f9fa;
+}
+
+.input-group input:focus {
+    background-color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(43, 122, 75, 0.1);
+}
+
+/* --- LỖI (ERROR MESSAGES) --- */
+.error-msg {
+    color: #e74c3c;
+    font-size: 12px;
+    display: none; /* Ẩn mặc định */
+    margin-top: 5px;
+}
+
+.general-error {
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+/* --- NÚT BẤM --- */
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(43, 122, 75, 0.3);
+}
+
+/* --- FOOTER --- */
+.card-footer {
+    margin-top: 25px;
+    font-size: 14px;
+}
+
+.card-footer a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 5px;
+    transition: 0.3s;
+}
+
+.card-footer a:hover {
+    text-decoration: underline;
+}
+
+/* --- RESPONSIVE MOBILE --- */
+@media (max-width: 480px) {
+    .register-card {
+        padding: 30px 20px;
+    }
+}
