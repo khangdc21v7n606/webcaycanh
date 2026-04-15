@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Green Garden - Thế Giới Cây Cảnh</title>
+    <title>Green Garden - Cửa hàng cây cảnh cao cấp</title>
     <link rel="stylesheet" href="TrangChu.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -13,64 +14,131 @@
             <div class="logo">
                 <h1>Green<span>Garden</span></h1>
             </div>
-
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Tìm kiếm cây cảnh...">
+            
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Bạn đang tìm cây gì hôm nay?">
+                <span class="search-icon">🔍</span>
             </div>
 
-            <div class="auth-buttons" id="authArea">
-                <button class="btn-login" onclick="openModal('login')">Đăng nhập</button>
-                <button class="btn-register" onclick="openModal('register')">Đăng ký</button>
+            <div class="auth-section">
+                <div id="guestSection">
+                    <button id="btnLogin" class="btn btn-outline">Đăng nhập</button>
+                    <button id="btnRegister" class="btn btn-primary">Đăng ký</button>
+                </div>
+                <div id="userSection" style="display: none;">
+                    <span id="userNameDisplay" class="user-greeting">Chào, User</span>
+                    <button id="btnLogout" class="btn btn-outline">Đăng xuất</button>
+                </div>
             </div>
         </div>
     </header>
 
-    <section class="slider-container">
-        <div class="slider" id="slider">
-            <div class="slide active" style="background-image: url('https://placehold.co/1200x400/27ae60/ffffff?text=Khuyen+Mai+Cay+Canh+Thang+Nay')"></div>
-            <div class="slide" style="background-image: url('https://placehold.co/1200x400/111111/ffffff?text=Sen+Da+Du+Cac+Loai')"></div>
-            <div class="slide" style="background-image: url('https://placehold.co/1200x400/2c3e50/ffffff?text=Cay+Phong+Thuy+Phat+Tai')"></div>
-        </div>
-        <button class="slider-btn prev" onclick="changeSlide(-1)">&#10094;</button>
-        <button class="slider-btn next" onclick="changeSlide(1)">&#10095;</button>
-    </section>
-
-    <main class="product-section">
-        <h2 class="section-title">Sản Phẩm Nổi Bật</h2>
-        <div class="product-grid" id="productGrid">
+    <main>
+       <section class="slider-container">
+            <div class="slides">
+                <div class="slide active">
+                    <div class="slide-overlay"></div>
+                    <img src="https://images.unsplash.com/photo-1416879598555-2571ad270388?auto=format&fit=crop&w=1600&h=600&q=80" alt="Banner 1">
+                    <div class="slide-content">
+                        <h2>Mang thiên nhiên<br>vào không gian sống</h2>
+                        <p>Khám phá bộ sưu tập cây lọc không khí tốt nhất cho ngôi nhà của bạn.</p>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="slide-overlay"></div>
+                    <img src="https://images.unsplash.com/photo-1466692476877-6d5264bc1266?auto=format&fit=crop&w=1600&h=600&q=80" alt="Banner 2">
+                    <div class="slide-content">
+                        <h2>Góc làm việc xanh</h2>
+                        <p>Giảm căng thẳng, tăng sáng tạo với các loại cây để bàn mini.</p>
+                    </div>
+                </div>
             </div>
+            <button class="slider-btn prev" onclick="changeSlide(-1)">&#10094;</button>
+            <button class="slider-btn next" onclick="changeSlide(1)">&#10095;</button>
+            <div class="dots">
+                <span class="dot active" onclick="currentSlide(0)"></span>
+                <span class="dot" onclick="currentSlide(1)"></span>
+            </div>
+        </section>
+
+        <section class="products-container">
+            <div class="section-header">
+                <h2>Sản Phẩm Mới Nhất</h2>
+                <p>Những chậu cây được chăm sóc tỉ mỉ nhất</p>
+            </div>
+            
+            <div id="noProductMsg" style="display: none; text-align: center; color: #e74c3c;">Không tìm thấy sản phẩm phù hợp.</div>
+            
+            <div class="product-grid" id="productList">
+                <div class="product">
+                    <div class="product-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1614594975525-e45190c55d40?auto=format&fit=crop&w=400&h=400&q=80" alt="Cây Monstera">
+                        <span class="badge">Bán chạy</span>
+                    </div>
+                    <div class="product-info">
+                        <h3>Cây Monstera Nam Mỹ</h3>
+                        <p class="price">250.000đ</p>
+                        <a href="SanPham.html" class="btn btn-outline-full">Xem chi tiết</a>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1599598425947-330026e15647?auto=format&fit=crop&w=400&h=400&q=80" alt="Cây Kim Tiền">
+                    </div>
+                    <div class="product-info">
+                        <h3>Cây Kim Tiền Phong Thủy</h3>
+                        <p class="price">300.000đ</p>
+                        <a href="SanPham.html" class="btn btn-outline-full">Xem chi tiết</a>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1600411833196-1c711a92e347?auto=format&fit=crop&w=400&h=400&q=80" alt="Cây Lưỡi Hổ">
+                        <span class="badge new">Mới</span>
+                    </div>
+                    <div class="product-info">
+                        <h3>Cây Lưỡi Hổ Viền Vàng</h3>
+                        <p class="price">200.000đ</p>
+                        <a href="SanPham.html" class="btn btn-outline-full">Xem chi tiết</a>
+                    </div>
+                </div>
+                <div class="product">
+                    <div class="product-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1459156212016-c812468e2115?auto=format&fit=crop&w=400&h=400&q=80" alt="Cây Xương Rồng">
+                    </div>
+                    <div class="product-info">
+                        <h3>Xương Rồng Tai Thỏ</h3>
+                        <p class="price">150.000đ</p>
+                        <a href="SanPham.html" class="btn btn-outline-full">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
-        <div class="footer-content">
-            <div class="footer-info">
-                <h3>Về Green Garden</h3>
-                <p>Website chuyên cung cấp các loại cây cảnh văn phòng, sen đá, bonsai chất lượng cao.</p>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Green<span>Garden</span></h3>
+                <p>Mang màu xanh tươi mát và sự bình yên đến mọi góc nhỏ trong không gian sống của bạn.</p>
             </div>
-            <div class="footer-contact">
-                <h3>Liên hệ</h3>
-                <p>📧 Email: contact@greengarden.com</p>
-                <p>📞 Điện thoại: 0123 456 789</p>
-                <p>🌐 Facebook: fb.com/greengarden</p>
+            <div class="footer-col">
+                <h4>Liên hệ</h4>
+                <p>📧 hello@greengarden.vn</p>
+                <p>📞 1900 123 456</p>
+                <p>📍 123 Đường Cây Xanh, Quận 1, TP.HCM</p>
+            </div>
+            <div class="footer-col">
+                <h4>Chính sách</h4>
+                <p><a href="#">Hướng dẫn mua hàng</a></p>
+                <p><a href="#">Chính sách bảo hành cây</a></p>
+                <p><a href="#">Vận chuyển & Đổi trả</a></p>
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; 2024 Green Garden. Đã đăng ký bản quyền.
+            <p>&copy; 2026 Green Garden. All rights reserved.</p>
         </div>
     </footer>
-
-    <div id="authModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modalTitle">Đăng nhập</h2>
-            <form id="authForm">
-                <input type="text" id="username" placeholder="Tên đăng nhập" required>
-                <input type="password" id="password" placeholder="Mật khẩu" required>
-                <button type="submit" id="authSubmitBtn">Xác nhận</button> 
-            </form>
-            <p id="authMessage" class="auth-message"></p>
-        </div>
-    </div>
 
     <script src="TrangChu.js"></script>
 </body>

@@ -1,180 +1,213 @@
-/* ================= 1. DỮ LIỆU SẢN PHẨM ================= */
-// Mảng chứa dữ liệu sản phẩm (bạn có thể thêm sản phẩm mới vào đây, thanh tìm kiếm vẫn sẽ hoạt động)
-const products = [
-    { id: 1, name: "Cây Kim Tiền", price: "150.000 VNĐ", image: "https://placehold.co/300x300/27ae60/ffffff?text=Kim+Tien" },
-    { id: 2, name: "Sen Đá Kim Cương", price: "50.000 VNĐ", image: "https://placehold.co/300x300/27ae60/ffffff?text=Sen+Da" },
-    { id: 3, name: "Cây Bàng Singapore", price: "250.000 VNĐ", image: "https://placehold.co/300x300/27ae60/ffffff?text=Bang+Singapore" },
-    { id: 4, name: "Bonsai Linh Sam", price: "850.000 VNĐ", image: "https://placehold.co/300x300/27ae60/ffffff?text=Bonsai" }
-];
+/* =========================================
+   1. LOGIC SLIDER (QUẢNG CÁO)
+   ========================================= */
+let slideIndex = 0;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+let slideInterval;
 
-/* ================= 2. HIỂN THỊ VÀ TÌM KIẾM SẢN PHẨM ================= */
-const productGrid = document.getElementById('productGrid');
+function showSlide(index) {
+    if (index >= slides.length) slideIndex = 0;
+    if (index < 0) slideIndex = slides.length - 1;
+    
+    // Ẩn tất cả và bỏ class active của dot
+    slides.forEach(slide => slide.style.display = "none");
+    dots.forEach(dot => dot.classList.remove('active'));
+    
+    // Hiển thị slide hiện tại
+    slides[slideIndex].style.display = "block";
+    dots[slideIndex].classList.add('active');
+}
+
+function changeSlide(n) {
+    slideIndex += n;
+    showSlide(slideIndex);
+    resetInterval();
+}
+
+function currentSlide(n) {
+    slideIndex = n;
+    showSlide(slideIndex);
+    resetInterval();
+}
+
+function resetInterval() {
+    clearInterval(slideInterval);
+    slideInterval = setInterval(() => changeSlide(1), 3000); // Tự động chạy mỗi 3s
+}
+
+// Khởi tạo slider
+showSlide(slideIndex);
+resetInterval();
+
+/* =========================================
+   2. LOGIC TÌM KIẾM SẢN PHẨM (REAL-TIME)
+   ========================================= */
 const searchInput = document.getElementById('searchInput');
+const noProductMsg = document.getElementById('noProductMsg');
 
-// Hàm render sản phẩm ra màn hình
-function renderProducts(productList) {
-    productGrid.innerHTML = ''; // Xóa rỗng grid cũ
-    if (productList.length === 0) {
-        productGrid.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">Không tìm thấy sản phẩm nào.</p>';
+/* --- TỰ ĐỘNG CUỘN XUỐNG KHI NHẤP VÀO Ô TÌM KIẾM --- */
+searchInput.addEventListener('focus', function() {
+    const productsSection = document.querySelector('.products-container');
+    const header = document.querySelector('header');
+    
+    // Tính toán vị trí của phần sản phẩm, trừ đi chiều cao của header (vì header của bạn đang dính ở trên cùng)
+    const headerHeight = header.offsetHeight;
+    const elementPosition = productsSection.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.scrollY - headerHeight - 20; // Trừ thêm 20px để có khoảng thở đẹp mắt
+
+    // Lệnh cuộn trang mượt mà
+    window.scrollTo({
+         top: offsetPosition,
+         behavior: "smooth"
+    });
+});
+
+// Sự kiện input sẽ kích hoạt mỗi khi gõ phím
+searchInput.addEventListener('input', function() {
+    const keyword = searchInput.value.toLowerCase().trim();
+    // Lấy TẤT CẢ sản phẩm hiện có trong DOM tại thời điểm gõ
+    // Nhờ cách này, nếu HTML thêm sản phẩm mới thì hàm vẫn hoạt động bình thường
+    const products = document.querySelectorAll('.product'); 
+    let hasVisibleProduct = false;
+
+    products.forEach(product => {
+        // Tìm thẻ h3 chứa tên cây bên trong mỗi product
+        const productName = product.querySelector('h3').innerText.toLowerCase();
+        
+        if (productName.includes(keyword)) {
+            product.style.display = "block"; // Hiện nếu khớp
+            hasVisibleProduct = true;
+        } else {
+            product.style.display = "none";  // Ẩn nếu không khớp
+        }
+    });
+
+    // Hiện thông báo "Không tìm thấy" nếu không có sản phẩm nào
+    if (!hasVisibleProduct) {
+        noProductMsg.style.display = "block";
+    } else {
+        noProductMsg.style.display = "none";
+    }
+});
+
+/* =========================================
+   3. LOGIC ĐĂNG NHẬP / ĐĂNG KÝ (LOCALSTORAGE)
+   ========================================= */
+const modal = document.getElementById('authModal');
+const closeBtn = document.querySelector('.close-btn');
+const btnLogin = document.getElementById('btnLogin');
+const btnRegister = document.getElementById('btnRegister');
+const btnLogout = document.getElementById('btnLogout');
+
+// Elements trong Modal
+const modalTitle = document.getElementById('modalTitle');
+const usernameInput = document.getElementById('usernameInput');
+const passwordInput = document.getElementById('passwordInput');
+const btnSubmitAuth = document.getElementById('btnSubmitAuth');
+const modalSwitchText = document.getElementById('modalSwitchText');
+const modalSwitchLink = document.getElementById('modalSwitchLink');
+const modalError = document.getElementById('modalError');
+
+let isLoginMode = true; // Cờ xác định đang ở form Đăng nhập hay Đăng ký
+
+// Cập nhật giao diện Header dựa vào trạng thái đăng nhập
+function checkLoginStatus() {
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+        document.getElementById('guestSection').style.display = "none";
+        document.getElementById('userSection').style.display = "block";
+        document.getElementById('userNameDisplay').innerText = `Chào, ${currentUser}`;
+    } else {
+        document.getElementById('guestSection').style.display = "block";
+        document.getElementById('userSection').style.display = "none";
+    }
+}
+// Chạy hàm kiểm tra ngay khi load trang
+checkLoginStatus();
+
+// Mở modal
+function openModal(mode) {
+    isLoginMode = mode === 'login';
+    updateModalUI();
+    modal.style.display = 'block';
+    modalError.style.display = 'none';
+    usernameInput.value = '';
+    passwordInput.value = '';
+}
+
+// Đóng modal
+closeBtn.onclick = () => modal.style.display = "none";
+window.onclick = (e) => { if (e.target == modal) modal.style.display = "none"; }
+
+// Cập nhật chữ trong Modal tùy thuộc mode
+function updateModalUI() {
+    if (isLoginMode) {
+        modalTitle.innerText = "Đăng nhập";
+        modalSwitchText.innerText = "Chưa có tài khoản?";
+        modalSwitchLink.innerText = "Đăng ký ngay";
+    } else {
+        modalTitle.innerText = "Đăng ký";
+        modalSwitchText.innerText = "Đã có tài khoản?";
+        modalSwitchLink.innerText = "Đăng nhập ngay";
+    }
+}
+
+// Chuyển đổi qua lại giữa form Đăng ký / Đăng nhập
+modalSwitchLink.onclick = (e) => {
+    e.preventDefault();
+    isLoginMode = !isLoginMode;
+    updateModalUI();
+    modalError.style.display = 'none';
+};
+
+// Gắn sự kiện mở modal cho các nút trên Header
+btnLogin.onclick = () => openModal('login');
+btnRegister.onclick = () => openModal('register');
+
+// Xử lý khi bấm nút "Xác nhận" trong Modal
+btnSubmitAuth.onclick = () => {
+    const user = usernameInput.value.trim();
+    const pass = passwordInput.value.trim();
+
+    if (!user || !pass) {
+        showError("Vui lòng nhập đầy đủ thông tin!");
         return;
     }
 
-    productList.forEach(product => {
-        // Tạo thẻ sản phẩm
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        // Chuyển trang khi click (Trang SanPham.html sẽ làm sau)
-        card.onclick = () => window.location.href = 'SanPham.html';
-
-        card.innerHTML = `
-            <img src="${product.image}" alt="${product.name}" class="product-img">
-            <div class="product-info">
-                <h3 class="product-name">${product.name}</h3>
-                <p class="product-price">${product.price}</p>
-            </div>
-        `;
-        productGrid.appendChild(card);
-    });
-}
-
-// Gọi hàm render lần đầu khi tải trang
-renderProducts(products);
-
-// Xử lý tìm kiếm realtime
-searchInput.addEventListener('input', function(e) {
-    const keyword = e.target.value.toLowerCase().trim();
-    // Lọc các sản phẩm có tên chứa từ khóa
-    const filteredProducts = products.filter(product => 
-        product.name.toLowerCase().includes(keyword)
-    );
-    renderProducts(filteredProducts);
-});
-
-
-/* ================= 3. SLIDER TỰ ĐỘNG ================= */
-let currentSlide = 0;
-const slides = document.querySelectorAll('.slide');
-
-function showSlide(index) {
-    // Ẩn tất cả slide
-    slides.forEach(slide => slide.classList.remove('active'));
-    
-    // Xử lý vòng lặp index
-    if (index >= slides.length) currentSlide = 0;
-    if (index < 0) currentSlide = slides.length - 1;
-    
-    // Hiển thị slide hiện tại
-    slides[currentSlide].classList.add('active');
-}
-
-// Nút bấm trái/phải
-function changeSlide(step) {
-    currentSlide += step;
-    showSlide(currentSlide);
-}
-
-// Chạy tự động mỗi 4 giây
-setInterval(() => {
-    currentSlide++;
-    showSlide(currentSlide);
-}, 4000);
-
-
-/* ================= 4. HỆ THỐNG ĐĂNG KÝ / ĐĂNG NHẬP ================= */
-const authModal = document.getElementById('authModal');
-const authForm = document.getElementById('authForm');
-const modalTitle = document.getElementById('modalTitle');
-const authSubmitBtn = document.getElementById('authSubmitBtn');
-const authMessage = document.getElementById('authMessage');
-const authArea = document.getElementById('authArea');
-
-let currentAction = 'login'; // 'login' hoặc 'register'
-
-// Kiểm tra trạng thái đăng nhập khi tải trang
-checkLoginState();
-
-function openModal(action) {
-    currentAction = action;
-    authModal.style.display = 'block';
-    authMessage.textContent = ''; // Xóa lỗi cũ
-    authForm.reset(); // Xóa form cũ
-
-    if (action === 'login') {
-        modalTitle.textContent = 'Đăng nhập';
-        authSubmitBtn.textContent = 'Đăng nhập';
-    } else {
-        modalTitle.textContent = 'Đăng ký tài khoản';
-        authSubmitBtn.textContent = 'Đăng ký';
-    }
-}
-
-function closeModal() {
-    authModal.style.display = 'none';
-}
-
-// Xử lý submit form
-authForm.addEventListener('submit', function(e) {
-    e.preventDefault(); // Ngăn load lại trang
-    
-    const user = document.getElementById('username').value.trim();
-    const pass = document.getElementById('password').value.trim();
-
-    if (currentAction === 'register') {
-        // Xử lý đăng ký
-        if (localStorage.getItem(user)) {
-            authMessage.textContent = "Tên đăng nhập đã tồn tại!";
-        } else {
-            // Lưu vào localStorage: Key là username, Value là password
-            localStorage.setItem(user, pass);
-            alert("Đăng ký thành công! Hệ thống tự động đăng nhập.");
-            
-            // Đăng ký xong tự động đăng nhập luôn
-            localStorage.setItem('currentUser', user); 
-            closeModal();
-            checkLoginState();
-        }
-    } else if (currentAction === 'login') {
-        // Xử lý đăng nhập
-        const savedPass = localStorage.getItem(user);
+    if (isLoginMode) {
+        // XỬ LÝ ĐĂNG NHẬP
+        const savedPass = localStorage.getItem(user); // Lấy mật khẩu từ localStorage
         if (savedPass && savedPass === pass) {
-            // Lưu trạng thái đăng nhập hiện tại
-            localStorage.setItem('currentUser', user);
-            closeModal();
-            checkLoginState();
+            localStorage.setItem('currentUser', user); // Lưu phiên đăng nhập
+            modal.style.display = "none";
+            checkLoginStatus();
+            alert("Đăng nhập thành công!");
         } else {
-            authMessage.textContent = "Sai tên đăng nhập hoặc mật khẩu!";
+            showError("Tài khoản hoặc mật khẩu không chính xác!");
+        }
+    } else {
+        // XỬ LÝ ĐĂNG KÝ
+        if (localStorage.getItem(user)) {
+            showError("Tên đăng nhập đã tồn tại!");
+        } else {
+            localStorage.setItem(user, pass); // Lưu tài khoản mới
+            alert("Đăng ký thành công! Đang tự động đăng nhập...");
+            localStorage.setItem('currentUser', user);
+            modal.style.display = "none";
+            checkLoginStatus();
         }
     }
-});
+};
 
-// Hàm kiểm tra xem user đã đăng nhập chưa và đổi UI Header
-function checkLoginState() {
-    const loggedInUser = localStorage.getItem('currentUser');
-    
-    if (loggedInUser) {
-        // Nếu đã đăng nhập, đổi nút thành Lời chào + Nút Đăng xuất
-        authArea.innerHTML = `
-            <span class="user-greeting">Xin chào, ${loggedInUser}!</span>
-            <button class="btn-logout" onclick="logout()">Đăng xuất</button>
-        `;
-    } else {
-        // Nếu chưa, hiện lại nút đăng nhập/đăng ký
-        authArea.innerHTML = `
-            <button class="btn-login" onclick="openModal('login')">Đăng nhập</button>
-            <button class="btn-register" onclick="openModal('register')">Đăng ký</button>
-        `;
-    }
-}
+// Xử lý Đăng xuất
+btnLogout.onclick = () => {
+    localStorage.removeItem('currentUser'); // Xóa phiên đăng nhập
+    checkLoginStatus(); // Cập nhật lại UI header
+    alert("Đã đăng xuất!");
+};
 
-// Hàm đăng xuất
-function logout() {
-    localStorage.removeItem('currentUser'); // Xóa trạng thái đăng nhập
-    checkLoginState(); // Cập nhật lại UI
-}
-
-// Đóng modal khi click ra vùng ngoài modal
-window.onclick = function(event) {
-    if (event.target == authModal) {
-        closeModal();
-    }
+function showError(msg) {
+    modalError.innerText = msg;
+    modalError.style.display = "block";
 }
