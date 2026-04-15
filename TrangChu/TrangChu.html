@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Garden - Thế Giới Cây Cảnh</title>
+    <link rel="stylesheet" href="TrangChu.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <h1>Green<span>Garden</span></h1>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Tìm kiếm cây cảnh...">
+            </div>
+
+            <div class="auth-buttons" id="authArea">
+                <button class="btn-login" onclick="openModal('login')">Đăng nhập</button>
+                <button class="btn-register" onclick="openModal('register')">Đăng ký</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="slider-container">
+        <div class="slider" id="slider">
+            <div class="slide active" style="background-image: url('https://placehold.co/1200x400/27ae60/ffffff?text=Khuyen+Mai+Cay+Canh+Thang+Nay')"></div>
+            <div class="slide" style="background-image: url('https://placehold.co/1200x400/111111/ffffff?text=Sen+Da+Du+Cac+Loai')"></div>
+            <div class="slide" style="background-image: url('https://placehold.co/1200x400/2c3e50/ffffff?text=Cay+Phong+Thuy+Phat+Tai')"></div>
+        </div>
+        <button class="slider-btn prev" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="slider-btn next" onclick="changeSlide(1)">&#10095;</button>
+    </section>
+
+    <main class="product-section">
+        <h2 class="section-title">Sản Phẩm Nổi Bật</h2>
+        <div class="product-grid" id="productGrid">
+            </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <h3>Về Green Garden</h3>
+                <p>Website chuyên cung cấp các loại cây cảnh văn phòng, sen đá, bonsai chất lượng cao.</p>
+            </div>
+            <div class="footer-contact">
+                <h3>Liên hệ</h3>
+                <p>📧 Email: contact@greengarden.com</p>
+                <p>📞 Điện thoại: 0123 456 789</p>
+                <p>🌐 Facebook: fb.com/greengarden</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 Green Garden. Đã đăng ký bản quyền.
+        </div>
+    </footer>
+
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Đăng nhập</h2>
+            <form id="authForm">
+                <input type="text" id="username" placeholder="Tên đăng nhập" required>
+                <input type="password" id="password" placeholder="Mật khẩu" required>
+                <button type="submit" id="authSubmitBtn">Xác nhận</button> 
+            </form>
+            <p id="authMessage" class="auth-message"></p>
+        </div>
+    </div>
+
+    <script src="TrangChu.js"></script>
+</body>
+</html>
