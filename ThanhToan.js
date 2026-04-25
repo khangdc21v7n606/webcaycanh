@@ -1,25 +1,20 @@
 /* =========================================
-   1. KIỂM TRA ĐĂNG NHẬP & XÁC ĐỊNH GIỎ HÀNG
+   1. LẤY GIỎ HÀNG (TẠM THỜI TỪ LOCALSTORAGE)
    ========================================= */
-const currentUser = localStorage.getItem('currentUser');
-let cart = []; 
-let cartStorageKey = ''; // BƯỚC SỬA 1: Đưa biến này ra ngoài cùng để không bị "nhốt"
+// Biến currentPHPUser sẽ được PHP "bơm" trực tiếp vào từ bên ngoài
+let cart = [];
+let cartStorageKey = 'cart_' + currentPHPUser;
 
-if (!currentUser) {
-    alert("Bạn cần đăng nhập để tiến hành thanh toán!");
-    window.location.href = "index.php";
-} else {
-    document.getElementById('userNameDisplay').innerText = `Xin chào, ${currentUser}`;
+// Lấy giỏ hàng ra
+cart = JSON.parse(localStorage.getItem(cartStorageKey)) || [];
 
-    // BƯỚC SỬA 2: Bỏ chữ "const" đi, chỉ gán giá trị thôi
-    cartStorageKey = 'cart_' + currentUser; 
-    cart = JSON.parse(localStorage.getItem(cartStorageKey)) || [];
-
-    if (cart.length === 0) {
-        alert("Giỏ hàng của bạn đang trống! Hãy chọn mua sản phẩm trước.");
-        window.location.href = "GioHang.php";
-    }
+// Nếu giỏ hàng trống thì đuổi về trang mua sắm
+if (cart.length === 0) {
+    alert("Giỏ hàng của bạn đang trống! Hãy chọn mua sản phẩm trước.");
+    // Nên cho về trang chủ để khách chọn sản phẩm thay vì trang Giỏ hàng trống
+    window.location.href = "index.php"; 
 }
+
 
 /* =========================================
    2. TÍNH TOÁN & HIỂN THỊ ĐƠN HÀNG

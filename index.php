@@ -1,3 +1,14 @@
+<?php 
+session_start(); // Chỉ gọi 1 lần duy nhất ở đây
+require 'db.php'; //kết nối database
+// Xử lý khi người dùng bấm nút Đăng xuất
+if (isset($_GET['action']) && $_GET['action'] == 'logout') {
+    session_unset();
+    session_destroy();
+    header("Location: index.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -21,17 +32,21 @@
             </div>
 
             <div class="auth-section">
-                <div id="guestSection">
-                    <button id="btnLogin" class="btn btn-outline">Đăng nhập</button>
-                    <a href="DangKy.php" id="btnRegister" class="btn btn-primary" style="text-decoration: none;">Đăng ký</a>
-                </div>
-                <div id="userSection" style="display: none;">
-                    <span id="userNameDisplay" class="user-greeting">Chào, User</span>
-                    <button id="btnLogout" class="btn btn-outline">Đăng xuất</button>
-                </div>
+                <?php if (isset($_SESSION['currentUser'])): ?>
+                    <div id="userSection" style="display: flex; align-items: center;">
+                        <span class="user-greeting" style="margin-right: 15px; font-weight: 600;">
+                            Chào, <?php echo $_SESSION['currentUser']; ?>
+                        </span>
+                        <a href="index.php?action=logout" class="btn btn-outline" style="text-decoration:none;">Đăng xuất</a>
+                    </div>
+                <?php else: ?>
+                    <div id="guestSection">
+                        <button id="btnLogin" class="btn btn-outline">Đăng nhập</button>
+                        <a href="DangKy.php" id="btnRegister" class="btn btn-primary" style="text-decoration: none;">Đăng ký</a>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
-        
     </header>
 
     <div id="loginModal" class="modal-overlay">
@@ -40,20 +55,31 @@
         <h2>Đăng Nhập</h2>
         <p>Chào mừng bạn đến với VuonNhoST</p>
         
-        <div class="input-group">
-            <label>Tên đăng nhập</label>
-            <input type="text" id="loginUsername" placeholder="Nhập tên tài khoản">
-        </div>
-        
-        <div class="input-group">
-            <label>Mật khẩu</label>
-            <input type="password" id="loginPassword" placeholder="Nhập mật khẩu">
-        </div>
+        <form method="POST" action="xu_ly_dang_nhap.php">
+            <div class="input-group">
+                <label>Tên đăng nhập</label>
+                <input type="text" id="loginUsername" name="loginUsername" placeholder="Nhập tên tài khoản" required>
+            </div>
+            
+            <div class="input-group">
+                <label>Mật khẩu</label>
+                <input type="password" id="loginPassword" name="loginPassword" placeholder="Nhập mật khẩu" required>
+            </div>
 
-        <p id="loginErrorMessage" class="error-msg"></p>
-        
-        <button id="btnSubmitLogin" class="btn btn-primary btn-full">Xác nhận</button>
-        
+            <?php
+            if (isset($_SESSION['loginError'])) {
+                echo '<p style="color:red; font-size:13px; text-align:center; margin-bottom:10px;">' . $_SESSION['loginError'] . '</p>';
+                echo "<script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            document.getElementById('loginModal').style.display = 'block';
+                        });
+                      </script>";
+                unset($_SESSION['loginError']); 
+            }
+            ?>
+            
+            <button type="submit" class="btn btn-primary btn-full">Xác nhận</button>
+        </form>
         <div class="modal-footer">
             <span>Bạn chưa có tài khoản?</span>
             <a href="DangKy.php">Đăng ký ngay</a>
@@ -106,68 +132,37 @@
             <div id="noProductMsg" style="display: none; text-align: center; color: #e74c3c;">Không tìm thấy sản phẩm phù hợp.</div>
             
             <div class="product-grid" id="productList">
-                <div class="product">
-                    <div class="product-img-wrapper">
-                        <img src="images/NhoHaDen.jpg" alt="Hạ Đen">
-                        <span class="badge">Bán chạy</span>
-                    </div>
-                    <div class="product-info">
-                        <h3>Nho Hạ Đen</h3>
-                        <p class="price">250.000đ</p>
-                        <a href="GioHang.php" class="btn btn-outline-full">Xem chi tiết</a>
-                    </div>
-                </div>
-                <div class="product">
-                    <div class="product-img-wrapper">
-                        <img src="images/NhoMongTay.webp" alt="Móng Tay">
-                    </div>
-                    <div class="product-info">
-                        <h3>Nho Móng Tay</h3>
-                        <p class="price">300.000đ</p>
-                        <a href="GioHang.php" class="btn btn-outline-full">Xem chi tiết</a>
-                    </div>
-                </div>
-                <div class="product">
-                    <div class="product-img-wrapper">
-                        <img src="images/NhoKyoho.jpg" alt="Kyoho">
-                        <span class="badge new">Mới</span>
-                    </div>
-                    <div class="product-info">
-                        <h3>Nho Kyoho</h3>
-                        <p class="price">200.000đ</p>
-                        <a href="GioHang.php" class="btn btn-outline-full">Xem chi tiết</a>
-                    </div>
-                </div>
-                <div class="product">
-                    <div class="product-img-wrapper">
-                        <img src="images/NhoBailey.jpg" alt="Bailey">
-                    </div>
-                    <div class="product-info">
-                        <h3>Nho Bailey</h3>
-                        <p class="price">150.000đ</p>
-                        <a href="GioHang.php" class="btn btn-outline-full">Xem chi tiết</a>
-                    </div>
-                </div>
-                <div class="product">
-                    <div class="product-img-wrapper">
-                        <img src="images/NhoKieng.jpg" alt="Kiểng">
-                    </div>
-                    <div class="product-info">
-                        <h3>Nho Kiểng</h3>
-                        <p class="price">150.000đ</p>
-                        <a href="GioHang.php" class="btn btn-outline-full">Xem chi tiết</a>
-                    </div>
-                </div>
-                <div class="product">
-                    <div class="product-img-wrapper">
-                        <img src="images/NhoMauDon.webp" alt="Mẫu Đơn">
-                    </div>
-                    <div class="product-info">
-                        <h3>Nho Mẫu Đơn</h3>
-                        <p class="price">150.000đ</p>
-                        <a href="GioHang.php" class="btn btn-outline-full">Xem chi tiết</a>
-                    </div>
-                </div>
+                <?php
+                // Lấy sản phẩm từ DB
+                $sql = "SELECT * FROM products ORDER BY id ASC";
+                $result = $conn->query($sql);
+
+                if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
+                        ?>
+                        <div class="product">
+                            <div class="product-img-wrapper">
+                                <img src="<?php echo $row['image']; ?>" alt="<?php echo $row['name']; ?>">
+                                
+                                <?php if($row['id'] == 1): ?>
+                                    <span class="badge">Bán chạy</span>
+                                <?php elseif($row['id'] == 3): ?>
+                                    <span class="badge new">Mới</span>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <div class="product-info">
+                                <h3><?php echo $row['name']; ?></h3>
+                                <p class="price"><?php echo number_format($row['price'], 0, ',', '.'); ?>đ</p>
+                                <a href="GioHang.php" class="btn btn-outline-full">Xem chi tiết</a>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    echo "<p style='text-align:center; width:100%;'>Hiện chưa có sản phẩm nào trong cửa hàng.</p>";
+                }
+                ?>
             </div>
         </section>
     </main>

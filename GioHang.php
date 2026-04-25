@@ -54,7 +54,10 @@
     </div>
 
     <div id="toast" class="toast">Đã thêm vào giỏ hàng!</div>
-
+    <script>
+        const currentPHPUser = "<?php echo $_SESSION['currentUser'] ?? 'guest'; ?>";
+    </script>
+    
     <script src="GioHang.js"></script>
 </body>
 </html>

@@ -122,6 +122,9 @@
             <button class="btn-primary" onclick="window.location.href='index.php'">Quay về Trang Chủ</button>
         </div>
     </div>
+     <script>
+        const currentPHPUser = "<?php echo $_SESSION['currentUser']; ?>";
+    </script>
 
     <script src="ThanhToan.js"></script>
 </body>

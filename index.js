@@ -111,94 +111,32 @@ if (searchInput) {
 }
 
 /* =========================================
-   3. LOGIC POP-UP ĐĂNG NHẬP MỚI
+   3. LOGIC HIỆU ỨNG POP-UP ĐĂNG NHẬP (Chỉ giữ lại đóng/mở)
    ========================================= */
 const loginModal = document.getElementById('loginModal');
 const btnLogin = document.getElementById('btnLogin');
 const closeX = document.querySelector('.close-modal');
-const btnSubmitLogin = document.getElementById('btnSubmitLogin');
 
-// 1. Mở Pop-up
+// Mở Pop-up khi bấm nút "Đăng nhập"
 if (btnLogin && loginModal) {
     btnLogin.addEventListener('click', () => {
         loginModal.style.display = 'block';
-        // Xóa thông báo lỗi và làm trống ô nhập khi mở lại form
-        document.getElementById('loginErrorMessage').style.display = 'none';
-        document.getElementById('loginUsername').value = '';
-        document.getElementById('loginPassword').value = '';
     });
 }
 
-// 2. Đóng Pop-up
+// Đóng Pop-up khi bấm dấu X
 if (closeX && loginModal) {
     closeX.addEventListener('click', () => {
         loginModal.style.display = 'none';
     });
 }
-// Đóng khi click ra vùng đen bên ngoài
+
+// Đóng Pop-up khi click ra vùng đen bên ngoài
 window.addEventListener('click', (e) => {
     if (e.target === loginModal) {
         loginModal.style.display = 'none';
     }
 });
-
-// 3. Xử lý Nút Xác Nhận Đăng Nhập
-if (btnSubmitLogin) {
-    btnSubmitLogin.addEventListener('click', () => {
-        const user = document.getElementById('loginUsername').value.trim();
-        const pass = document.getElementById('loginPassword').value.trim();
-        const errorMsg = document.getElementById('loginErrorMessage');
-
-        if (user === "" || pass === "") {
-            errorMsg.innerText = "Vui lòng điền đầy đủ thông tin!";
-            errorMsg.style.display = "block";
-            return;
-        }
-
-        const savedPass = localStorage.getItem(user);
-
-        if (savedPass && savedPass === pass) {
-            localStorage.setItem('currentUser', user); 
-            alert("Đăng nhập thành công!");
-            loginModal.style.display = 'none'; 
-            checkLoginStatus(); 
-        } else {
-            errorMsg.innerText = "Tên đăng nhập hoặc mật khẩu không đúng!";
-            errorMsg.style.display = "block";
-        }
-    });
-}
-
-// 4. Xử lý Đăng xuất
-const btnLogout = document.getElementById('btnLogout');
-if (btnLogout) {
-    btnLogout.addEventListener('click', () => {
-        localStorage.removeItem('currentUser'); // Xóa phiên đăng nhập
-        checkLoginStatus(); // Cập nhật lại UI header
-        alert("Đã đăng xuất!");
-        
-        // (Tùy chọn) Nếu bạn muốn khi đăng xuất, web tự động quay về trang chủ để reset mọi thứ:
-        window.location.reload(); 
-    });
-}
-// 5. Cập nhật giao diện Header
-function checkLoginStatus() {
-    const currentUser = localStorage.getItem('currentUser');
-    const guestSection = document.getElementById('guestSection');
-    const userSection = document.getElementById('userSection');
-    const nameDisplay = document.getElementById('userNameDisplay');
-
-    if (currentUser) {
-        if(guestSection) guestSection.style.display = 'none';
-        if(userSection) userSection.style.display = 'block';
-        if(nameDisplay) nameDisplay.innerText = `Chào, ${currentUser}`;
-    } else {
-        if(guestSection) guestSection.style.display = 'block';
-        if(userSection) userSection.style.display = 'none';
-    }
-}
-
-checkLoginStatus();
 
 /* =========================================
    6. ĐỒNG BỘ DỮ LIỆU SẢN PHẨM SANG GIỎ HÀNG

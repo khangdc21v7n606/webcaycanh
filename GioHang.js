@@ -28,42 +28,25 @@ function renderShop() {
 renderShop(); // Chạy hàm hiển thị
 
 /* =========================================
-   2. LOGIC GIỎ HÀNG (LIÊN KẾT TÀI KHOẢN)
+   2. LOGIC GIỎ HÀNG (SỬ DỤNG currentPHPUser TỪ PHP)
    ========================================= */
-let cart = []; // Khởi tạo mảng giỏ hàng trống mặc định
-let currentUser = null; // Khởi tạo biến lưu tên người dùng
-let cartStorageKey = 'shoppingCart_guest'; // Key mặc định cho khách vãng lai
+let cart = []; 
+// Biến currentPHPUser đã được khai báo ở file PHP
+let cartStorageKey = 'cart_' + currentPHPUser; 
 
-// Hàm kiểm tra ai đang đăng nhập để load đúng giỏ hàng của người đó
-function loadUserCart() {
-    currentUser = localStorage.getItem('currentUser');
-    
-    if (currentUser) {
-        // Nếu có người đăng nhập -> Dùng key riêng của người đó
-        cartStorageKey = 'cart_' + currentUser;
-    } else {
-        // Nếu chưa đăng nhập -> Dùng key của khách
-        cartStorageKey = 'shoppingCart_guest';
-    }
-
-    // Load giỏ hàng từ localStorage dựa trên key đã xác định
+function loadCart() {
     cart = JSON.parse(localStorage.getItem(cartStorageKey)) || [];
 }
+loadCart(); // Chạy hàm lấy giỏ hàng
 
-// Chạy hàm load giỏ hàng ngay khi mở trang
-loadUserCart();
-
-// Hàm lưu giỏ hàng
 function saveCart() {
     localStorage.setItem(cartStorageKey, JSON.stringify(cart));
 }
 
-// Chuyển đổi "250.000đ" thành số 250000 để tính toán
 function parsePrice(priceStr) {
     return parseInt(priceStr.replace(/\D/g, ''));
 }
 
-// Chuyển đổi số 250000 thành "250.000đ" để hiển thị
 function formatPrice(number) {
     return number.toLocaleString('vi-VN') + 'đ';
 }
@@ -108,7 +91,6 @@ function changeQuantity(productId, delta) {
         }
     }
 }
-
 /* =========================================
    3. CẬP NHẬT GIAO DIỆN (UI) GIỎ HÀNG
    ========================================= */
