@@ -23,7 +23,7 @@
             <div class="auth-section">
                 <div id="guestSection">
                     <button id="btnLogin" class="btn btn-outline">Đăng nhập</button>
-                    <a href="DangKy.html" id="btnRegister" class="btn btn-primary" style="text-decoration: none;">Đăng ký</a>
+                    <a href="DangKy.php" id="btnRegister" class="btn btn-primary" style="text-decoration: none;">Đăng ký</a>
                 </div>
                 <div id="userSection" style="display: none;">
                     <span id="userNameDisplay" class="user-greeting">Chào, User</span>
@@ -56,7 +56,7 @@
         
         <div class="modal-footer">
             <span>Bạn chưa có tài khoản?</span>
-            <a href="DangKy.html">Đăng ký ngay</a>
+            <a href="DangKy.php">Đăng ký ngay</a>
         </div>
     </div>
 </div>
@@ -114,7 +114,7 @@
                     <div class="product-info">
                         <h3>Nho Hạ Đen</h3>
                         <p class="price">250.000đ</p>
-                        <a href="GioHang.html" class="btn btn-outline-full">Xem chi tiết</a>
+                        <a href="GioHang.php" class="btn btn-outline-full">Xem chi tiết</a>
                     </div>
                 </div>
                 <div class="product">
@@ -124,7 +124,7 @@
                     <div class="product-info">
                         <h3>Nho Móng Tay</h3>
                         <p class="price">300.000đ</p>
-                        <a href="GioHang.html" class="btn btn-outline-full">Xem chi tiết</a>
+                        <a href="GioHang.php" class="btn btn-outline-full">Xem chi tiết</a>
                     </div>
                 </div>
                 <div class="product">
@@ -135,7 +135,7 @@
                     <div class="product-info">
                         <h3>Nho Kyoho</h3>
                         <p class="price">200.000đ</p>
-                        <a href="GioHang.html" class="btn btn-outline-full">Xem chi tiết</a>
+                        <a href="GioHang.php" class="btn btn-outline-full">Xem chi tiết</a>
                     </div>
                 </div>
                 <div class="product">
@@ -145,7 +145,7 @@
                     <div class="product-info">
                         <h3>Nho Bailey</h3>
                         <p class="price">150.000đ</p>
-                        <a href="GioHang.html" class="btn btn-outline-full">Xem chi tiết</a>
+                        <a href="GioHang.php" class="btn btn-outline-full">Xem chi tiết</a>
                     </div>
                 </div>
                 <div class="product">
@@ -155,7 +155,7 @@
                     <div class="product-info">
                         <h3>Nho Kiểng</h3>
                         <p class="price">150.000đ</p>
-                        <a href="GioHang.html" class="btn btn-outline-full">Xem chi tiết</a>
+                        <a href="GioHang.php" class="btn btn-outline-full">Xem chi tiết</a>
                     </div>
                 </div>
                 <div class="product">
@@ -165,7 +165,7 @@
                     <div class="product-info">
                         <h3>Nho Mẫu Đơn</h3>
                         <p class="price">150.000đ</p>
-                        <a href="GioHang.html" class="btn btn-outline-full">Xem chi tiết</a>
+                        <a href="GioHang.php" class="btn btn-outline-full">Xem chi tiết</a>
                     </div>
                 </div>
             </div>

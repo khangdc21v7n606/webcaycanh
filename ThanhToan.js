@@ -7,7 +7,7 @@ let cart = []; // Khai báo sẵn biến cart ở ngoài để các phần sau k
 if (!currentUser) {
     // Nếu chưa đăng nhập -> Báo lỗi và đuổi về trang chủ
     alert("Bạn cần đăng nhập để tiến hành thanh toán!");
-    window.location.href = "index.html";
+    window.location.href = "index.php";
 } else {
     // NẾU ĐÃ ĐĂNG NHẬP -> Mới chạy tiếp các lệnh dưới đây
     
@@ -20,7 +20,7 @@ if (!currentUser) {
 
     if (cart.length === 0) {
         alert("Giỏ hàng của bạn đang trống! Hãy chọn mua sản phẩm trước.");
-        window.location.href = "GioHang.html";
+        window.location.href = "GioHang.php";
     }
 }
 

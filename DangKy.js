@@ -61,7 +61,7 @@ document.getElementById('registerForm').addEventListener('submit', function(e) {
 
         // Thông báo và chuyển hướng
         alert("Đăng ký thành công! Đang tự động đăng nhập...");
-        window.location.href = 'index.html'; 
+        window.location.href = 'index.php'; 
     }
 });
 
