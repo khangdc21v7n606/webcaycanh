@@ -131,6 +131,6 @@ session_start();
     </script>
 
     <!-- 2. Gọi file xử lý Thanh toán -->
-    <script src="ThanhToan.js"></script>
+    <script src="ThanhToan.js?v=1"></script>
 </body>
 </html>

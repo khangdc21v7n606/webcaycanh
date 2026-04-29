@@ -76,52 +76,55 @@ radioButtons.forEach(radio => {
 });
 
 /* =========================================
-   4. LOGIC XÁC NHẬN THANH TOÁN
+   4. LOGIC XÁC NHẬN THANH TOÁN (KẾT NỐI PHP)
    ========================================= */
 document.getElementById('checkoutForm').addEventListener('submit', function (e) {
-    e.preventDefault(); // Ngăn load trang
+    e.preventDefault(); // Ngăn không cho trang web tự load lại
 
-    // Reset lỗi
-    document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+    // Xóa trắng các thông báo lỗi cũ
+    document.querySelectorAll('.error-msg').forEach(msg => msg.style.display = 'none');
 
-    const name = document.getElementById('fullname').value.trim();
+    // 1. Gom thông tin từ các ô nhập liệu
+    const fullname = document.getElementById('fullname').value.trim();
     const phone = document.getElementById('phone').value.trim();
     const address = document.getElementById('address').value.trim();
+    const note = document.getElementById('note').value.trim();
+
+    // Lấy phương thức thanh toán đang được tích chọn
     const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
 
-    let isValid = true;
-
-    // Validate Thông tin chung
-    if (name === "") { showError('errName', "Vui lòng nhập họ tên."); isValid = false; }
-    if (phone === "" || phone.length < 10) { showError('errPhone', "Vui lòng nhập SDT hợp lệ."); isValid = false; }
-    if (address === "") { showError('errAddress', "Vui lòng nhập địa chỉ."); isValid = false; }
-
-    // Validate Thẻ (Nếu chọn)
-    if (paymentMethod === 'card') {
-        const cardNum = document.getElementById('cardNumber').value.trim();
-        const cardName = document.getElementById('cardName').value.trim();
-        const cardExp = document.getElementById('cardExp').value.trim();
-        const cardCvv = document.getElementById('cardCvv').value.trim();
-
-        if (cardNum === "" || cardName === "" || cardExp === "" || cardCvv === "") {
-            showError('errCard', "Vui lòng điền đầy đủ thông tin Thẻ Tín Dụng.");
-            isValid = false;
-        }
+    // Validate sơ bộ: Không cho bỏ trống
+    if (fullname === "" || phone === "" || address === "") {
+        alert("Vui lòng điền đầy đủ Họ tên, Số điện thoại và Địa chỉ giao hàng!");
+        return; // Dừng lại, không gửi đi
     }
 
-    if (isValid) {
-        processPayment();
-    }
-});
+    // 2. Tính lại tổng tiền (BẮT BUỘC PHẢI PARSE GIÁ TIỀN)
+    let subTotal = 0;
+    cart.forEach(item => {
+        // Gọi hàm parsePrice để biến "150.000đ" thành số 150000
+        const realPrice = parsePrice(item.price);
+        subTotal += (realPrice * item.quantity);
+    });
+    let finalTotal = subTotal + 30000; // Cộng phí ship
 
-function showError(id, msg) {
-    const el = document.getElementById(id);
-    el.innerText = msg;
-    el.style.display = 'block';
-}
+    // 3. Đóng gói dữ liệu thành 1 khối (Object)
+    const orderData = {
+        fullname: fullname,
+        phone: phone,
+        address: address,
+        note: note,
+        payment: paymentMethod,
+        totalAmount: finalTotal, // Đã tính đúng
+        cartItems: cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: parsePrice(item.price) // Gửi giá sạch (số nguyên) cho PHP
+        }))
+    };
 
-function processPayment() {
-    // 1. Giao diện Loading
+    // Hiện hiệu ứng Loading quay quay
     const btnText = document.getElementById('btnText');
     const btnLoading = document.getElementById('btnLoading');
     const btnSubmit = document.getElementById('btnSubmit');
@@ -130,13 +133,35 @@ function processPayment() {
     btnLoading.style.display = 'inline-block';
     btnSubmit.disabled = true;
 
-    // 2. Giả lập thời gian xử lý giao dịch (2 giây)
-    setTimeout(() => {
-        // 3. Xóa giỏ hàng của user sau khi mua xong
-        localStorage.removeItem(cartStorageKey);
+    // 4. Gửi khối dữ liệu sang file PHP
+    fetch('xu_ly_thanh_toan.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Xóa sạch giỏ hàng trong bộ nhớ máy
+                localStorage.removeItem(cartStorageKey);
 
-        // 4. Mở Popup thành công
-        document.getElementById('successModal').style.display = 'flex';
-
-    }, 2000);
-}
+                // Hiện bảng thông báo thành công
+                document.getElementById('successModal').style.display = 'flex';
+            } else {
+                alert("Rất tiếc: " + data.message);
+                // Phục hồi lại nút bấm nếu lỗi
+                btnText.style.display = 'inline-block';
+                btnLoading.style.display = 'none';
+                btnSubmit.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi:', error);
+            alert("Có lỗi xảy ra trong quá trình kết nối với máy chủ!");
+            btnText.style.display = 'inline-block';
+            btnLoading.style.display = 'none';
+            btnSubmit.disabled = false;
+        });
+});

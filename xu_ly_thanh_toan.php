@@ -2,6 +2,9 @@
 session_start();
 require 'db.php';
 
+// 1. CÔNG TẮC QUAN TRỌNG: Ép PHP phải báo lỗi nếu SQL sai, không được giấu!
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 // Khai báo trả về dữ liệu dạng JSON cho file JS đọc được
 header('Content-Type: application/json');
 
@@ -22,9 +25,9 @@ if ($data) {
     $note = $data['note'];
     $payment = $data['payment'];
     $total_amount = $data['totalAmount'];
-    $cart_items = $data['cartItems']; // Đây là một mảng chứa các chậu nho
+    $cart_items = $data['cartItems'];
 
-    // Bật chế độ Transaction (Bảo vệ dữ liệu: Lỗi 1 bước là hủy toàn bộ, không lưu chắp vá)
+    // Bật chế độ Transaction 
     $conn->begin_transaction();
 
     try {
@@ -43,19 +46,23 @@ if ($data) {
         $stmt_detail = $conn->prepare($sql_detail);
 
         foreach ($cart_items as $item) {
-            // JS gửi lên có thể id nằm ở $item['id'], số lượng ở $item['quantity'], giá ở $item['price']
-            $stmt_detail->bind_param("iiii", $order_id, $item['id'], $item['quantity'], $item['price']);
+            // Chuyển đổi dữ liệu cho chắc chắn không bị sai kiểu (int)
+            $prod_id = (int)$item['id'];
+            $qty = (int)$item['quantity'];
+            $price = (int)$item['price'];
+            
+            $stmt_detail->bind_param("iiii", $order_id, $prod_id, $qty, $price);
             $stmt_detail->execute();
         }
 
-        // Nếu mọi thứ trót lọt, chốt lưu vào DB
+        // Chốt lưu vào DB
         $conn->commit();
         echo json_encode(['success' => true, 'message' => 'Đặt hàng thành công!']);
 
     } catch (Exception $e) {
-        // Nếu có lỗi ở đâu đó, quay xe không lưu gì cả
+        // Hủy lưu nếu có lỗi và BÁO LỖI THẬT RA MÀN HÌNH
         $conn->rollback();
-        echo json_encode(['success' => false, 'message' => 'Lỗi hệ thống: ' . $e->getMessage()]);
+        echo json_encode(['success' => false, 'message' => 'LỖI SQL: ' . $e->getMessage()]);
     }
 } else {
     echo json_encode(['success' => false, 'message' => 'Không nhận được dữ liệu!']);
