@@ -189,7 +189,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
             <p>&copy; 2026 VuonNhoSocTrang. All rights reserved.</p>
         </div>
     </footer>
-
+        <script>
+            const currentPHPUser = "<?php echo isset($_SESSION['currentUser']) ? $_SESSION['currentUser'] : 'guest'; ?>";
+        </script>                               
     <script src="index.js"></script>
 </body>
 </html>

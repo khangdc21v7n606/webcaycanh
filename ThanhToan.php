@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -15,7 +18,7 @@
                 <h1>VuonNho<span>SocTrang</span></h1>
             </div>
             <div class="user-greeting">
-                <span id="userNameDisplay">Xin chào, Khách</span>
+                <span id="userNameDisplay">Xin chào, <?php echo isset($_SESSION['currentUser']) ? $_SESSION['currentUser'] : 'Khách'; ?></span>
             </div>
         </div>
     </header>
@@ -122,10 +125,12 @@
             <button class="btn-primary" onclick="window.location.href='index.php'">Quay về Trang Chủ</button>
         </div>
     </div>
-     <script>
-        const currentPHPUser = "<?php echo $_SESSION['currentUser']; ?>";
+    <!-- 1. Bơm tên tài khoản từ PHP sang JS -->
+    <script>
+        const currentPHPUser = "<?php echo isset($_SESSION['currentUser']) ? $_SESSION['currentUser'] : 'guest'; ?>";
     </script>
 
+    <!-- 2. Gọi file xử lý Thanh toán -->
     <script src="ThanhToan.js"></script>
 </body>
 </html>

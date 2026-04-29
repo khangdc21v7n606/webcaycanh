@@ -1,18 +1,17 @@
 /* =========================================
-   1. LẤY GIỎ HÀNG (TẠM THỜI TỪ LOCALSTORAGE)
+   1. LẤY GIỎ HÀNG TỪ LOCALSTORAGE
    ========================================= */
-// Biến currentPHPUser sẽ được PHP "bơm" trực tiếp vào từ bên ngoài
 let cart = [];
+// currentPHPUser đã được lấy từ file PHP
 let cartStorageKey = 'cart_' + currentPHPUser;
 
-// Lấy giỏ hàng ra
+// Lấy dữ liệu giỏ hàng
 cart = JSON.parse(localStorage.getItem(cartStorageKey)) || [];
 
-// Nếu giỏ hàng trống thì đuổi về trang mua sắm
+// Kiểm tra: Nếu giỏ hàng trống thì đuổi về trang chủ
 if (cart.length === 0) {
     alert("Giỏ hàng của bạn đang trống! Hãy chọn mua sản phẩm trước.");
-    // Nên cho về trang chủ để khách chọn sản phẩm thay vì trang Giỏ hàng trống
-    window.location.href = "index.php"; 
+    window.location.href = "index.php";
 }
 
 
@@ -67,7 +66,7 @@ const radioButtons = document.querySelectorAll('input[name="payment"]');
 const creditCardForm = document.getElementById('creditCardForm');
 
 radioButtons.forEach(radio => {
-    radio.addEventListener('change', function() {
+    radio.addEventListener('change', function () {
         if (this.value === 'card') {
             creditCardForm.style.display = 'block'; // Hiện form thẻ
         } else {
@@ -79,7 +78,7 @@ radioButtons.forEach(radio => {
 /* =========================================
    4. LOGIC XÁC NHẬN THANH TOÁN
    ========================================= */
-document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+document.getElementById('checkoutForm').addEventListener('submit', function (e) {
     e.preventDefault(); // Ngăn load trang
 
     // Reset lỗi
@@ -89,7 +88,7 @@ document.getElementById('checkoutForm').addEventListener('submit', function(e) {
     const phone = document.getElementById('phone').value.trim();
     const address = document.getElementById('address').value.trim();
     const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-    
+
     let isValid = true;
 
     // Validate Thông tin chung
@@ -138,6 +137,6 @@ function processPayment() {
 
         // 4. Mở Popup thành công
         document.getElementById('successModal').style.display = 'flex';
-        
+
     }, 2000);
 }
