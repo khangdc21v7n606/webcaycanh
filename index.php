@@ -175,7 +175,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'logout') {
             </div>
             <div class="footer-col">
                 <h4>Liên hệ</h4>
-                <p>📧 VuonNhoSocTrang@gmail.com
+                <p><a href="https://www.facebook.com/nhovaotperusoctrang">📧 facebook</a></p>
                 <p>📞 094-8989-036
                 <p>📍 68 An Dương Vương, Ấp Hoà Mỹ, Mỹ Xuyên, Sóc Trăng</p>
             </div>
