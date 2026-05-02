@@ -13,12 +13,13 @@ session_start();
 <body>
 
     <header>
-        <div class="header-container">
-            <div class="logo">
-                <h1>VuonNho<span>SocTrang</span></h1>
-            </div>
-            <a href="index.php" class="btn-back"> <-Về Trang Chủ</a>
-        </div>
+<div class="header-container" style="text-align: center; padding: 15px 0;">
+    <a href="index.php" style="text-decoration: none;">
+        <h2 style="margin: 0; color: #333;">
+            VuonNho<span style="color: #2e7d32;">SocTrang</span>
+        </h2>
+    </a>
+</div>
     </header>
 
     <main>

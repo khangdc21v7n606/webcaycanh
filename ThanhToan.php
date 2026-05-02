@@ -14,8 +14,12 @@ session_start();
 
     <header>
         <div class="header-container">
-            <div class="logo">
-                <h1>VuonNho<span>SocTrang</span></h1>
+            <div style="text-align: center;">
+                <a href="index.php" style="text-decoration: none;">
+                    <h2 style="margin: 0; color: #333;">
+                        VuonNho<span style="color: #2e7d32;">SocTrang</span>
+                    </h2>
+                </a>
             </div>
             <div class="user-greeting">
                 <span id="userNameDisplay">Xin chào, <?php echo isset($_SESSION['currentUser']) ? $_SESSION['currentUser'] : 'Khách'; ?></span>
@@ -25,7 +29,6 @@ session_start();
 
     <main class="checkout-container">
         <div class="checkout-form-section">
-            <a href="GioHang.php" class="btn-back"> <-Quay Lại Giỏ hàng</a>
             <h2>Thông tin giao hàng</h2>
             
             <form id="checkoutForm">
